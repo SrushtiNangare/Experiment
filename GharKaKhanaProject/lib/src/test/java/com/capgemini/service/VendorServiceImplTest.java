@@ -41,7 +41,7 @@ class VendorServiceImplTest {
 		menu.setFoodPrice(120);
 		menu.setFoodQuantity(1);
 		menu.setVendor(vendor);
-		FoodItem expected = vendorService.addFood(menu, vendor.getVendorId());
+		FoodItem expected = vendorService.addFood(menu, 0);
 		FoodItem actual = vendorService.findFoodById(expected.getFoodId());
 		assertEquals(expected.getFoodId(), actual.getFoodId());
 	}
@@ -61,11 +61,13 @@ class VendorServiceImplTest {
 	}
 
 	@Test
-	void testmodifyFoodShouldReturnMenuObject() throws NoSuchFoodItemException {
+	void testmodifyFoodShouldReturnMenuObject() throws NoSuchFoodItemException, NoSuchVendorException {
+		Vendor vendor = new Vendor();
+
 		FoodItem menu = new FoodItem();
 		menu.setFoodName("Before Testing");
 		menu.setFoodPrice(80);
-		FoodItem expected = vendorService.addFood(menu);
+		FoodItem expected = vendorService.addFood(menu, vendor.getVendorId());
 		expected.setFoodName("After Testing");
 		expected.setFoodPrice(90);
 		expected = vendorService.modifyFood(expected);
@@ -74,11 +76,12 @@ class VendorServiceImplTest {
 	}
 
 	@Test
-	void testRemoveFoodByfoodId() throws NoSuchFoodItemException {
+	void testRemoveFoodByfoodId() throws NoSuchFoodItemException, NoSuchVendorException {
 		FoodItem menutoberemoved = new FoodItem();
+		Vendor vendor = new Vendor();
 		menutoberemoved.setFoodName("pizza");
 		menutoberemoved.setFoodPrice(125);
-		FoodItem item = vendorService.addFood(menutoberemoved);
+		FoodItem item = vendorService.addFood(menutoberemoved, vendor.getVendorId());
 		boolean expected = true;
 		boolean actual = vendorService.removeFood(item.getFoodId());
 		assertEquals(expected, actual);

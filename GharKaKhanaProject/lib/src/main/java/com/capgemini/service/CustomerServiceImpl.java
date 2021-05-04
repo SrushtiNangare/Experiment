@@ -106,23 +106,20 @@ public class CustomerServiceImpl implements CustomerService {
 
 	/* Cancel order by giving order id */
 	@Override
-	public boolean cancelOrder(int orderId) throws NoSuchOrderException {
+	public String cancelOrder(int orderId, String status) throws NoSuchOrderException {
 		logger.info("cancelOrder() called");
 		try {
 			if (isvalidOrderId(orderId)) {
-				logger.info("Valid Order Id");
-				Order order = findOrderById(orderId); /* calling method findOrderById */
-				if (order != null) {
-					orderRepository.delete(order);
-					return true;
-				}
+				Order o1 = orderRepository.findByOrderId(orderId);
+				o1.setOrderStatus(status);
+				orderRepository.save(o1);
+				return status;
 			}
 		} catch (NoSuchElementException e) {
 			throw new NoSuchOrderException(
 					"Order with " + orderId + " is not found"); /* Throwing and handling exception */
 		}
-
-		return false;
+		return null;
 	}
 
 	@Override
@@ -140,7 +137,6 @@ public class CustomerServiceImpl implements CustomerService {
 			throw new NoSuchOrderException(
 					"Order with " + orderId + " is not found"); /* Throwing and handling exception */
 		}
-
 		return null;
 	}
 
@@ -167,13 +163,30 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Override
 	/* Update Order by selecting from menu */
-	public Order modifyOrder(int orderId) throws NoSuchOrderException {
+	public Order modifyOrder(int orderId, int customerId, List<FoodItem> foodItems, int vendorId)
+			throws NoSuchOrderException {
 		logger.info("modifyOrder() called");
+		List<FoodItem> list = new ArrayList<>();
+		LocalDate date = LocalDate.now();
+		LocalTime time = LocalTime.now();
+		Customer customer = customerRepository.findById(customerId).get();
+		Vendor vendor = vendorRepository.findById(vendorId).get();
 		try {
 			if (isvalidOrderId(orderId)) {
 				logger.info("Valid Order Id");
 				Order order = findOrderById(orderId); /* calling method findVendorById */
 				if (order != null) {
+					order.setCustomer(customer);
+					order.setOrderPrice(calculatePrice(foodItems));
+					for (FoodItem foodItem : foodItems) {
+						list.add(foodItemRepository.findById(foodItem.getFoodId()).get());
+					}
+					order.setFoodItems(list);
+					order.setOrderTime(time);
+					order.setOrderDate(date);
+					order.setOrderStatus("Pending");
+					order.setVendor(vendor);
+					order.setOrderPaymentStatus("Pending");
 					orderRepository.save(order);
 					return order;
 				}

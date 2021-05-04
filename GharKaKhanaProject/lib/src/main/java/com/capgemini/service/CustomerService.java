@@ -16,7 +16,7 @@ public interface CustomerService {
 
 	public Order placeOrder(int customerId, List<FoodItem> foodItems, int vendorId);
 
-	public boolean cancelOrder(int orderId) throws NoSuchOrderException;
+	public String cancelOrder(int orderId, String status) throws NoSuchOrderException;
 
 	public List<Object> viewDishesSortByPrice();
 
@@ -28,7 +28,8 @@ public interface CustomerService {
 
 	public Order findOrderById(int orderId) throws NoSuchOrderException;
 
-	public Order modifyOrder(int foodId) throws NoSuchOrderException;
+	public Order modifyOrder(int orderId, int customerId, List<FoodItem> foodItems, int vendorId)
+			throws NoSuchOrderException;
 
 	public List<Order> findAllOrder(int customerId);
 

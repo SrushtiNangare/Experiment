@@ -116,7 +116,7 @@ public class AdminController {
 	}
 
 	/*
-	 * // http://localhost:9090/GharKaKhana-api/admins/deleteVendor/
+	 * // http://localhost:9090/GharKaKhana-api/admins/deleteVendor/{vendorId}
 	 */	
 	@DeleteMapping(path = "deleteVendor/{vendorId}")
 	public ResponseEntity<Boolean> deleteVendor(@PathVariable("vendorId") int vendorId) throws NoSuchVendorException {

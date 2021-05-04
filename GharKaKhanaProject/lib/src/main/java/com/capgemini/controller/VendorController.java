@@ -101,7 +101,7 @@ public class VendorController {
 	}
 
 	/*
-	 * http://localhost:9090/GharKaKhana-api/vendors/deleteFoodItem/
+	 * http://localhost:9090/GharKaKhana-api/vendors/deleteFoodItem/{foodId}
 	 */
 	@DeleteMapping(path = "/deleteFoodItem/{foodId}")
 	public ResponseEntity<Boolean> deleteFoodItem(@PathVariable("foodId") int foodId) throws NoSuchFoodItemException {

@@ -21,7 +21,7 @@ public interface FoodItemRepository extends JpaRepository<FoodItem, Integer> {
 	@Query("SELECT m.foodPrice FROM FoodItem m Where m.foodName =:foodName")
 	public double getFoodPriceByName(@Param("foodName") String foodName);
 
-	@Query("SELECT m.foodName, m.foodPrice FROM FoodItem m ")
+	@Query("SELECT m.foodId, m.foodName, m.foodPrice FROM FoodItem m ")
 	public List<Object> viewMenu();
 	
 	@Query("SELECT m FROM FoodItem m ORDER BY m.foodId")

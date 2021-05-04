@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -90,14 +91,14 @@ public class CustomerController {
 	}
 
 	/*
-	 * // http://localhost:9090/GharKaKhana-api/customers/cancel/
+	 * // http://localhost:9090/GharKaKhana-api/customers/cancel/{orderId}/{status}
 	 */
-	@DeleteMapping(path = "/cancel/{orderId}")
-	public ResponseEntity<Order> cancelOrder(@PathVariable("orderId") int orderId) throws NoSuchOrderException {
+	@PutMapping(path = "/cancel/{orderId}/{status}")
+	public ResponseEntity<String> cancelOrder(@PathVariable("orderId") int orderId, @PathVariable("status") String status) throws NoSuchOrderException {
 		logger.info("cancelOrder() called");
-		boolean result = service.cancelOrder(orderId);
-		if (result)
-			return new ResponseEntity<>(HttpStatus.ACCEPTED);
+		String result = service.cancelOrder(orderId, status);
+		if (result != null)
+			return new ResponseEntity<>(result, HttpStatus.ACCEPTED);
 		else
 			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
 	}
@@ -172,10 +173,11 @@ public class CustomerController {
 	/*
 	 * http://localhost:9090/GharKaKhana-api/customers/modifyOrder/orderId
 	 */	
-	@PostMapping(path = "modifyOrder/{orderId}", consumes = MediaType.APPLICATION_JSON_VALUE)
-		public ResponseEntity<Order> modifyOrder(@PathVariable("orderId") int orderId) throws NoSuchOrderException {
+	@PutMapping(path = "modifyOrder/{orderId}/{customerId}/{vendorId}", consumes = MediaType.APPLICATION_JSON_VALUE)
+		public ResponseEntity<Order> modifyOrder(@PathVariable("orderId") int orderId, @PathVariable("customerId") int customerId,
+				@RequestBody List<FoodItem> foodItems, @PathVariable("vendorId") int vendorId) throws NoSuchOrderException {
 			logger.info("getOrdorById() called");
-			Order result = service.modifyOrder(orderId);
+			Order result = service.modifyOrder(orderId, customerId, foodItems, vendorId);
 			if (result != null)
 				return new ResponseEntity<>(result, HttpStatus.ACCEPTED);
 			else
