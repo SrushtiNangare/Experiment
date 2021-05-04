@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,7 @@ import com.capgemini.repository.VendorRepository;
 import com.capgemini.utilities.GlobalResources;
 
 @Service
+@Transactional
 public class AdminServiceImpl implements AdminService {
 
 	@Autowired
@@ -37,7 +40,7 @@ public class AdminServiceImpl implements AdminService {
 
 	@Autowired
 	private AdminRepository adminRepository;
-	
+
 	@Autowired
 	private AdminService adminService;
 
@@ -53,7 +56,7 @@ public class AdminServiceImpl implements AdminService {
 		}
 		return result;
 	}
-	
+
 	@Override
 	public String adminLogin(int adminId, String password) throws NoSuchAdminException {
 		logger.info("AdminLogin() called");
@@ -169,17 +172,21 @@ public class AdminServiceImpl implements AdminService {
 		return null;
 	}
 
+	@Transactional
 	@Override
 	public boolean removeOrderByAdmin(int orderId) throws NoSuchOrderException {
 		logger.info("removeOrderByAdmin() called");
 		try {
 			if (isvalidOrderId(orderId)) {
 				logger.info("Valid Order Id");
-				Order order = findOrderById(orderId); /* calling method findOrderById */
-				if (order != null) {
-					orderRepository.delete(order);
-					return true;
-				}
+//				Order order = findOrderById(orderId);/* calling method findOrderById */
+				orderRepository.setCustomerIdNull(orderId);
+				orderRepository.setVendorIdNull(orderId);
+				Order order = findOrderById(orderId);/* calling method findOrderById */
+				System.out.println(order);
+				orderRepository.save(order);
+				orderRepository.deleteById(orderId);
+				return true;
 			}
 		} catch (NoSuchElementException e) {
 			throw new NoSuchOrderException(

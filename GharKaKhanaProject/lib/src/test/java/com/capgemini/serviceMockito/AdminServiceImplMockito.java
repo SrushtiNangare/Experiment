@@ -11,96 +11,48 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-import com.capgemini.entities.Customer;
-import com.capgemini.entities.CustomerAddress;
-import com.capgemini.entities.Vendor;
-import com.capgemini.exceptions.NoSuchCustomerException;
-import com.capgemini.exceptions.NoSuchVendorException;
-import com.capgemini.repository.AdminRepository;
-import com.capgemini.repository.CustomerRepository;
+import com.capgemini.entities.FoodItem;
+import com.capgemini.exceptions.NoSuchFoodItemException;
+import com.capgemini.repository.FoodItemRepository;
+import com.capgemini.repository.OrderRepository;
 import com.capgemini.repository.VendorRepository;
-import com.capgemini.service.AdminService;
-import com.capgemini.service.CustomerService;
+import com.capgemini.service.VendorService;
 
 @SpringBootTest
-class AdminServiceImplMockito {
+class VendorServiceImplTestMockito {
+
 	@Autowired
-	private AdminService service;
-	@Autowired
-	private CustomerService customerService;
+	private VendorService vendorService;
+
 	@MockBean
-	private AdminRepository repository;
+	/* Creating reference (it creates loosely coupled application) */
+	private FoodItemRepository foodItemRepository;
+
 	@MockBean
-	private CustomerRepository customerRepository;
+	private OrderRepository orderRepository;
+
 	@MockBean
 	private VendorRepository vendorRepository;
 
 	@Test
-	void testFindCustomerByIdShouldReturnCustomerObject() throws NoSuchCustomerException {
-		Customer customer = new Customer();
-		customer.setCustomerId(1);
-		customer.setFirstName("Keval");
-		customer.setLastName("Chheda");
-		customer.setUserName("Keuuval");
-		customer.setPassword("Keval");
-		customer.setContactNo(4545454545L);
-		CustomerAddress address = new CustomerAddress();
-		address.setAddressId(1);
-		address.setCity("Test");
-		address.setArea("Testing");
-		address.setState("Test");
-		address.setPincode(100000);
-		customer.setCustomerAddress(address);
-		Optional<Customer> expected = Optional.of(customer);
-		when(customerRepository.findById(1)).thenReturn(expected);
+	public void findMenuByIdTest() throws NoSuchFoodItemException {
+		FoodItem menu = new FoodItem();
+		menu.setFoodId(5);
+		menu.setFoodName("Burger");
+		menu.setFoodPrice(120);
+		menu.setFoodQuantity(2);
 
-		Customer result = service.findCustomerById(customer.getCustomerId());
-		assertEquals(expected, result);
+		Optional<FoodItem> expected = Optional.of(menu);
+		when(foodItemRepository.findById(5)).thenReturn(expected);
 
-	}
-
-//	@Test
-//	void testFindAdminByIdShouldReturnCustomerObject() throws Exception {
-//		Admin admin = new Admin();
-//		admin.setAdminName("only");
-//		admin.setAdminUsername("chheda");
-//		admin.setAdminPassword("onlychheda");
-//
-//		Optional<Admin> expected = Optional.of(admin);
-//		when(repository.findById(admin.getAdminId())).thenReturn(expected);
-//
-//		Admin result = service.findAdminById(admin.getAdminId());
-//		assertEquals(expected, result);
-//
-//	}
-
-	@Test
-	void testFindVendorByIdShouldReturnVendorObject() throws Exception {
-		Vendor vendor = new Vendor();
-		vendor.setVendorName("only");
-		vendor.setVendorUsername("chheda");
-		vendor.setVendorPassword("onlychheda");
-
-		Optional<Vendor> expected = Optional.of(vendor);
-		when(vendorRepository.findById(1)).thenReturn(expected);
-
-		Vendor result = service.findVendorById(vendor.getVendorId());
-		assertEquals(vendor, result);
-
+		FoodItem result = vendorService.findFoodById(menu.getFoodId());
+		assertEquals(menu, result);
 	}
 
 	@Test
-	void testFindCustomerByIdShouldThrowNoSuchStudentException() {
-		assertThrows(NoSuchCustomerException.class, () -> {
-			service.findCustomerById(100);
+	void testFindMenuByIdShouldThrowNoSuchFoodItemException() {
+		assertThrows(NoSuchFoodItemException.class, () -> {
+			vendorService.findFoodById(100);
 		});
 	}
-
-	@Test
-	void testFindVendorByIdShouldThrowNoSuchVendorException() {
-		assertThrows(NoSuchVendorException.class, () -> {
-			service.findVendorById(100);
-		});
-	}
-
 }
