@@ -24,6 +24,7 @@ import com.capgemini.repository.OrderRepository;
 import com.capgemini.repository.VendorRepository;
 import com.capgemini.utilities.GlobalResources;
 
+/*Customer Service Implementation*/
 @Service
 public class CustomerServiceImpl implements CustomerService {
 
@@ -54,6 +55,7 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	@Override
+	/* Customer will login with their ID and Password */
 	public String customerLogin(int customerId, String password) throws NoSuchCustomerException {
 		logger.info("customerLogin() called");
 		Customer customer = adminService.findCustomerById(customerId);
@@ -96,69 +98,13 @@ public class CustomerServiceImpl implements CustomerService {
 
 	}
 
+	/* Calculating Order Price */
 	public double calculatePrice(List<FoodItem> foodItems) {
 		logger.info("calculatePrice() called");
 		double totalPrice = 0;
 		for (FoodItem foodItem : foodItems)
 			totalPrice += foodItem.getFoodPrice() * foodItem.getFoodQuantity();
 		return totalPrice;
-	}
-
-	/* Cancel order by giving order id */
-	@Override
-	public String cancelOrder(int orderId, String status) throws NoSuchOrderException {
-		logger.info("cancelOrder() called");
-		try {
-			if (isvalidOrderId(orderId)) {
-				Order o1 = orderRepository.findByOrderId(orderId);
-				o1.setOrderStatus(status);
-				orderRepository.save(o1);
-				return status;
-			}
-		} catch (NoSuchElementException e) {
-			throw new NoSuchOrderException(
-					"Order with " + orderId + " is not found"); /* Throwing and handling exception */
-		}
-		return null;
-	}
-
-	@Override
-	public Order findOrderById(int orderId) throws NoSuchOrderException {
-		logger.info("findOrderById() called");
-		try {
-			if (isvalidOrderId(orderId)) {
-				logger.info("Valid Order Id");
-				Optional<Order> order = orderRepository.findById(orderId); /* selecting order by id */
-				if (order.get() != null) {
-					return order.get();
-				}
-			}
-		} catch (NoSuchElementException e) {
-			throw new NoSuchOrderException(
-					"Order with " + orderId + " is not found"); /* Throwing and handling exception */
-		}
-		return null;
-	}
-
-	@Override
-	/* View Dishes by Price in Ascending or Descending Order */
-	public List<Object> viewDishesSortByPrice() {
-		logger.info("viewDishesSortByPrice() called");
-		return foodItemRepository.getDishesBySortedAmount();
-	}
-
-	@Override
-	/* Search Dishes by their names */
-	public List<FoodItem> searchDishes(String foodName) throws NoSuchDishException {
-		logger.info("searchDishes() called");
-		return foodItemRepository.getDishesByName(foodName);
-	}
-
-	@Override
-	public String viewOrderStatusById(int orderId) throws NoSuchOrderException {
-		logger.info("viewStatusByid() called");
-		String status = orderRepository.getOrderStatusById(orderId);
-		return status;
 	}
 
 	@Override
@@ -199,19 +145,79 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	@Override
-	public List<Object> viewMenu() {
-		logger.info("veiwMenu() called");
-		return foodItemRepository.viewMenu();
-	}
-
-	@Override
 	/* View All Order */
 	public List<Order> findAllOrder(int customerId) {
 		logger.info("findAllOrder() called");
 		return orderRepository.findAllCustomerOrders(customerId);
 	}
 
-	// Validate Customer
+	/* Find Order Using Order ID */
+	@Override
+	public Order findOrderById(int orderId) throws NoSuchOrderException {
+		logger.info("findOrderById() called");
+		try {
+			if (isvalidOrderId(orderId)) {
+				logger.info("Valid Order Id");
+				Optional<Order> order = orderRepository.findById(orderId); /* selecting order by id */
+				if (order.get() != null) {
+					return order.get();
+				}
+			}
+		} catch (NoSuchElementException e) {
+			throw new NoSuchOrderException(
+					"Order with " + orderId + " is not found"); /* Throwing and handling exception */
+		}
+		return null;
+	}
+
+	/* Cancel order by giving order id */
+	@Override
+	public String cancelOrder(int orderId, String status) throws NoSuchOrderException {
+		logger.info("cancelOrder() called");
+		try {
+			if (isvalidOrderId(orderId)) {
+				Order o1 = orderRepository.findByOrderId(orderId);
+				o1.setOrderStatus(status);
+				orderRepository.save(o1);
+				return status;
+			}
+		} catch (NoSuchElementException e) {
+			throw new NoSuchOrderException(
+					"Order with " + orderId + " is not found"); /* Throwing and handling exception */
+		}
+		return null;
+	}
+
+	/* View All Food Items from the menu */
+	@Override
+	public List<Object> viewMenu() {
+		logger.info("veiwMenu() called");
+		return foodItemRepository.viewMenu();
+	}
+
+	@Override
+	/* View Dishes by Price in Ascending or Descending Order */
+	public List<Object> viewDishesSortByPrice() {
+		logger.info("viewDishesSortByPrice() called");
+		return foodItemRepository.getDishesBySortedAmount();
+	}
+
+	@Override
+	/* Search Dishes by their names */
+	public List<FoodItem> searchDishes(String foodName) throws NoSuchDishException {
+		logger.info("searchDishes() called");
+		return foodItemRepository.getDishesByName(foodName);
+	}
+
+	/* View Order status using Order ID */
+	@Override
+	public String viewOrderStatusById(int orderId) throws NoSuchOrderException {
+		logger.info("viewStatusByid() called");
+		String status = orderRepository.getOrderStatusById(orderId);
+		return status;
+	}
+
+	/* Validate Customer */
 	public boolean isValidCustomer(Customer customer) {
 		logger.info("isValidCustomer() called");
 		boolean flag = true;
@@ -222,7 +228,7 @@ public class CustomerServiceImpl implements CustomerService {
 			flag = false;
 		else if (!customer.getUserName().matches("[A-Za-z]+"))
 			flag = false;
-		else if (!customer.getPassword().matches("[A-Za-z]+"))
+		else if (!customer.getPassword().matches("[A-Za-z]+[@#$%&]"))
 			flag = false;
 		else if (!s.matches("\\d{10}"))
 			flag = false;
@@ -231,7 +237,7 @@ public class CustomerServiceImpl implements CustomerService {
 		return flag;
 	}
 
-	// Validate OrderId
+	/* Validate OrderId */
 	public boolean isvalidOrderId(int orderId) {
 		logger.info("isvalidOrderId() called");
 		if (orderId <= 0)
@@ -239,7 +245,7 @@ public class CustomerServiceImpl implements CustomerService {
 		return true;
 	}
 
-	// Validate FoodId
+	/* Validate FoodId */
 	public boolean isValidFoodId(int foodId) {
 		logger.info("isValidFoodId() called");
 		if (foodItemRepository.getOne(foodId) != null) {

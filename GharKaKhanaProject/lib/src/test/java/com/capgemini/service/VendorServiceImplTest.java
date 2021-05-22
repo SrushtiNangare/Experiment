@@ -70,7 +70,7 @@ class VendorServiceImplTest {
 		FoodItem expected = vendorService.addFood(menu, vendor.getVendorId());
 		expected.setFoodName("After Testing");
 		expected.setFoodPrice(90);
-		expected = vendorService.modifyFood(expected);
+		expected = vendorService.modifyFood(expected, vendor.getVendorId());
 		assertEquals(expected.getFoodName(), menu.getFoodName());
 		assertEquals(expected.getFoodPrice(), menu.getFoodPrice());
 	}

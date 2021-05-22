@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,12 +30,12 @@ public class CustomerController {
 
 	@Autowired
 	private CustomerService service;
-	
+
 	private Logger logger = GlobalResources.getLogger(CustomerController.class);
 
 	/*
 	 * http://localhost:9090/GharKaKhana-api/customers/addCustomer
-	 */	
+	 */
 	@PostMapping(path = "/addCustomer", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Customer> addCustomer(@RequestBody Customer customer) {
 		logger.info("addCustomer() called");
@@ -47,10 +46,9 @@ public class CustomerController {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	}
 
-	
 	/*
-	 * http://localhost:9090/GharKaKhana-api/customers/loginCustomer/customerId/ password
-	 */	 
+	 * http://localhost:9090/GharKaKhana-api/customers/loginCustomer/{customerId}/{password}
+	 */
 	@PostMapping(path = "/loginCustomer/{customerId}/{password}")
 	public ResponseEntity<String> login(@PathVariable("customerId") int customerId,
 			@PathVariable("password") String password) throws NoSuchCustomerException {
@@ -63,9 +61,9 @@ public class CustomerController {
 	}
 
 	/*
-	 *  http://localhost:9090/GharKaKhana-api/customers/placeOrder/customerId/vendorId
+	 * http://localhost:9090/GharKaKhana-api/customers//placeOrder/{customerId}/{vendorId}
 	 */
-	@PostMapping(path = "placeOrder/{customerId}/{vendorId}")
+	@PostMapping(path = "/placeOrder/{customerId}/{vendorId}")
 	public ResponseEntity<Order> placeOrder(@PathVariable("customerId") int customerId,
 			@RequestBody List<FoodItem> foodItems, @PathVariable("vendorId") int vendorId) {
 		logger.info("placeOrder() called");
@@ -77,11 +75,10 @@ public class CustomerController {
 	}
 
 	/*
-	 *  http://localhost:9090/GharKaKhana-api/customers/status/orderId
-	 */	
-	@GetMapping(path = "status/{orderId}")
-	public ResponseEntity<String> viewOrderStatus(@PathVariable("orderId") int orderId)
-			throws NoSuchOrderException {
+	 * http://localhost:9090/GharKaKhana-api/customers/status/{orderId}
+	 */
+	@GetMapping(path = "/status/{orderId}")
+	public ResponseEntity<String> viewOrderStatus(@PathVariable("orderId") int orderId) throws NoSuchOrderException {
 		logger.info("viewOrderStatus() called");
 		String result = service.viewOrderStatusById(orderId);
 		if (result != null)
@@ -91,10 +88,11 @@ public class CustomerController {
 	}
 
 	/*
-	 * // http://localhost:9090/GharKaKhana-api/customers/cancel/{orderId}/{status}
+	 * http://localhost:9090/GharKaKhana-api/customers/cancel/{orderId}/{status}
 	 */
 	@PutMapping(path = "/cancel/{orderId}/{status}")
-	public ResponseEntity<String> cancelOrder(@PathVariable("orderId") int orderId, @PathVariable("status") String status) throws NoSuchOrderException {
+	public ResponseEntity<String> cancelOrder(@PathVariable("orderId") int orderId,
+			@PathVariable("status") String status) throws NoSuchOrderException {
 		logger.info("cancelOrder() called");
 		String result = service.cancelOrder(orderId, status);
 		if (result != null)
@@ -104,9 +102,9 @@ public class CustomerController {
 	}
 
 	/*
-	 * http://localhost:9090/GharKaKhana-api/customers/searchDish/foodName
+	 * http://localhost:9090/GharKaKhana-api/customers/searchDishByName/{foodName}
 	 */
-	@GetMapping(path = "/searchDish/{foodName}")
+	@GetMapping(path = "/searchDishByName/{foodName}")
 	public ResponseEntity<List<FoodItem>> searchDishByName(@PathVariable("foodName") String foodName)
 			throws NoSuchDishException {
 		logger.info("searchDishByName() called");
@@ -131,7 +129,7 @@ public class CustomerController {
 	}
 
 	/*
-	 * http://localhost:9090/GharKaKhana-api/customers/viewAllOrders/customerId
+	 * http://localhost:9090/GharKaKhana-api/customers/viewAllOrders/{customerId}
 	 */
 	@GetMapping(path = "/viewAllOrders/{customerId}")
 	public ResponseEntity<List<Order>> getAllOrders(@PathVariable("customerId") int customerId) {
@@ -145,7 +143,7 @@ public class CustomerController {
 
 	/*
 	 * http://localhost:9090/GharKaKhana-api/customers/viewAllFoodItem
-	 */	
+	 */
 	@GetMapping(path = "/viewAllFoodItem")
 	public ResponseEntity<List<Object>> viewAllFoodItem() {
 		logger.info("getAllOrder() called");
@@ -155,11 +153,10 @@ public class CustomerController {
 		else
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	}
-	
 
 	/*
-	 * http://localhost:9090/GharKaKhana-api/customers/findOrderById/orderId
-	 */	
+	 * http://localhost:9090/GharKaKhana-api/customers/findOrderById/{orderId}
+	 */
 	@GetMapping(path = "findOrderById/{orderId}")
 	public ResponseEntity<Order> getOrderById(@PathVariable("orderId") int orderId) throws NoSuchOrderException {
 		logger.info("getOrdorById() called");
@@ -169,18 +166,19 @@ public class CustomerController {
 		else
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	}
-	
+
 	/*
-	 * http://localhost:9090/GharKaKhana-api/customers/modifyOrder/orderId
-	 */	
+	 * http://localhost:9090/GharKaKhana-api/customers/modifyOrder/{orderId}/{customerId}/{vendorId}
+	 */
 	@PutMapping(path = "modifyOrder/{orderId}/{customerId}/{vendorId}", consumes = MediaType.APPLICATION_JSON_VALUE)
-		public ResponseEntity<Order> modifyOrder(@PathVariable("orderId") int orderId, @PathVariable("customerId") int customerId,
-				@RequestBody List<FoodItem> foodItems, @PathVariable("vendorId") int vendorId) throws NoSuchOrderException {
-			logger.info("getOrdorById() called");
-			Order result = service.modifyOrder(orderId, customerId, foodItems, vendorId);
-			if (result != null)
-				return new ResponseEntity<>(result, HttpStatus.ACCEPTED);
-			else
-				return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
-		}
+	public ResponseEntity<Order> modifyOrder(@PathVariable("orderId") int orderId,
+			@PathVariable("customerId") int customerId, @RequestBody List<FoodItem> foodItems,
+			@PathVariable("vendorId") int vendorId) throws NoSuchOrderException {
+		logger.info("getOrdorById() called");
+		Order result = service.modifyOrder(orderId, customerId, foodItems, vendorId);
+		if (result != null)
+			return new ResponseEntity<>(result, HttpStatus.ACCEPTED);
+		else
+			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+	}
 }

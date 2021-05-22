@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.capgemini.entities.FoodItem;
 import com.capgemini.entities.Order;
-import com.capgemini.exceptions.NoSuchAdminException;
 import com.capgemini.exceptions.NoSuchFoodItemException;
 import com.capgemini.exceptions.NoSuchOrderException;
 import com.capgemini.exceptions.NoSuchVendorException;
@@ -92,8 +91,8 @@ public class VendorController {
 	 * http://localhost:9090/GharKaKhana-api/vendors/updateFood/
 	 */
 	@PutMapping(path = "/updateFood", consumes = MediaType.APPLICATION_JSON_VALUE, produces = "application/json")
-	public ResponseEntity<FoodItem> modifyFood(@RequestBody FoodItem foodItem) throws NoSuchFoodItemException {
-		FoodItem result = vendorService.modifyFood(foodItem);
+	public ResponseEntity<FoodItem> modifyFood(@RequestBody FoodItem foodItem, @PathVariable("vendorId") int vendorId) throws NoSuchFoodItemException, NoSuchVendorException {
+		FoodItem result = vendorService.modifyFood(foodItem, vendorId);
 		if (result != null)
 			return new ResponseEntity<>(result, HttpStatus.CREATED);
 		else

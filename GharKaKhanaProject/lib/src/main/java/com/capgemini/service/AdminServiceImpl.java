@@ -47,6 +47,53 @@ public class AdminServiceImpl implements AdminService {
 	private Logger logger = GlobalResources.getLogger(AdminServiceImpl.class);
 
 	@Override
+	/* Register Admin with their details */
+	public Admin registerAdmin(Admin admin) {
+		logger.info("registerAdmin() called");
+		Admin result = null;
+		if (isValidAdmin(admin)) {
+			logger.info("Valid Admin");
+			result = adminRepository.save(admin);
+		}
+		return result;
+	}
+
+	/* Admin will login using ID and Password */
+	@Override
+	public String adminLogin(int adminId, String password) throws NoSuchAdminException {
+		logger.info("AdminLogin() called");
+		Admin admin = adminService.findAdminById(adminId);
+		String pass = adminRepository.getPassword(password);
+		if (admin.getAdminPassword().equals(pass))
+			return "Login Successful";
+		else
+			return "Invalid UserId or Password";
+	}
+
+	@Override
+	/* Find All Registered Admins with their details */
+	public List<Admin> findAllAdmins() {
+		logger.info("findAllAdmins() called");
+		return adminRepository.findAll();
+	}
+
+	/* Find Admin using Admin ID */
+	@Override
+	public Admin findAdminById(int adminId) throws NoSuchAdminException {
+		logger.info("findAdminById() called");
+		try {
+			Optional<Admin> admin = adminRepository.findById(adminId); /* selecting vendor by id */
+			if (admin.get() != null) {
+				return admin.get();
+			}
+		} catch (NoSuchElementException e) {
+			throw new NoSuchAdminException(
+					"Admin with " + adminId + " is not found"); /* Throwing and handling exception */
+		}
+		return null;
+	}
+
+	@Override
 	/* Adds vendor by accepting vendor object */
 	public Vendor addVendor(Vendor vendor) {
 		logger.info("addVendor() called");
@@ -57,15 +104,41 @@ public class AdminServiceImpl implements AdminService {
 		return result;
 	}
 
+	/* View All Vendors */
 	@Override
-	public String adminLogin(int adminId, String password) throws NoSuchAdminException {
-		logger.info("AdminLogin() called");
-		Admin admin = adminService.findAdminById(adminId);
-		String pass = adminRepository.getPassword(password);
-		if (admin.getAdminPassword().equals(pass))
-			return "Login Successful";
-		else
-			return "Invalid UserId or Password";
+	public List<Object> findAllVendors() {
+		logger.info("findAllVendors() called");
+		return vendorRepository.viewAllVendors();
+	}
+
+	/* Find Vendor Using VendorId */
+	@Override
+	public Vendor findVendorById(int vendorId) throws NoSuchVendorException {
+		logger.info("findVendorById() called");
+		try {
+			if (isvalidVendorId(vendorId)) {
+				logger.info("Valid vendor Id");
+				Optional<Vendor> vendor = vendorRepository.findById(vendorId); /* selecting vendor by id */
+				if (vendor.get() != null) {
+					return vendor.get();
+				}
+			}
+		} catch (NoSuchElementException e) {
+			throw new NoSuchVendorException(
+					"Vendor with " + vendorId + " is not found"); /* Throwing and handling exception */
+		}
+
+		return null;
+	}
+
+	@Override
+	/* Updates vendor by accepting vendor id */
+	public Vendor modifyVendor(Vendor vendor) throws NoSuchVendorException {
+		logger.info("modifyVendor() called");
+		Vendor result = null;
+		if (isValidVendor(vendor))
+			result = vendorRepository.save(vendor);
+		return result;
 	}
 
 	@Override
@@ -88,37 +161,14 @@ public class AdminServiceImpl implements AdminService {
 		return true;
 	}
 
+	/* View All customers */
 	@Override
-	/* Updates vendor by accepting vendor id */
-	public Vendor modifyVendor(Vendor vendor) throws NoSuchVendorException {
-		logger.info("modifyVendor() called");
-		Vendor result = null;
-		if (isValidVendor(vendor))
-			result = vendorRepository.save(vendor);
-		return result;
+	public List<Object> findAllCustomer() {
+		logger.info("findAllCustomer() called");
+		return customerRepository.viewAllCustomers();
 	}
 
-	@Override
-	/* View Order by sort Amount */
-	public List<Order> findSortedOrderByAmount() {
-		logger.info("findSortedOrderByAmount() called");
-		return orderRepository.getOrderBySortedAmount();
-	}
-
-	@Override
-	/* View Order by sort Date */
-	public List<Order> findSortedOrderByDate() {
-		logger.info("findSortedOrderByDate() called");
-		return orderRepository.getOrderBySortedDate();
-	}
-
-	@Override
-	/* View All Order */
-	public List<Order> findAllOrder() {
-		logger.info("findAllOrder() called");
-		return orderRepository.findAll();
-	}
-
+	/* Find Customer Using customer ID */
 	@Override
 	public Customer findCustomerById(int customerId) throws NoSuchCustomerException {
 		logger.info("findCustomerById() called");
@@ -139,63 +189,27 @@ public class AdminServiceImpl implements AdminService {
 	}
 
 	@Override
-	public Vendor findVendorById(int vendorId) throws NoSuchVendorException {
-		logger.info("findVendorById() called");
-		try {
-			if (isvalidVendorId(vendorId)) {
-				logger.info("Valid vendor Id");
-				Optional<Vendor> vendor = vendorRepository.findById(vendorId); /* selecting vendor by id */
-				if (vendor.get() != null) {
-					return vendor.get();
-				}
-			}
-		} catch (NoSuchElementException e) {
-			throw new NoSuchVendorException(
-					"Vendor with " + vendorId + " is not found"); /* Throwing and handling exception */
-		}
-
-		return null;
+	/* View All Orders */
+	public List<Order> findAllOrder() {
+		logger.info("findAllOrder() called");
+		return orderRepository.findAll();
 	}
 
 	@Override
-	public Admin findAdminById(int adminId) throws NoSuchAdminException {
-		logger.info("findAdminById() called");
-		try {
-			Optional<Admin> admin = adminRepository.findById(adminId); /* selecting vendor by id */
-			if (admin.get() != null) {
-				return admin.get();
-			}
-		} catch (NoSuchElementException e) {
-			throw new NoSuchAdminException(
-					"Admin with " + adminId + " is not found"); /* Throwing and handling exception */
-		}
-		return null;
+	/* View Order sorted by Price */
+	public List<Order> findSortedOrderByAmount() {
+		logger.info("findSortedOrderByAmount() called");
+		return orderRepository.getOrderBySortedAmount();
 	}
 
-	@Transactional
 	@Override
-	public boolean removeOrderByAdmin(int orderId) throws NoSuchOrderException {
-		logger.info("removeOrderByAdmin() called");
-		try {
-			if (isvalidOrderId(orderId)) {
-				logger.info("Valid Order Id");
-//				Order order = findOrderById(orderId);/* calling method findOrderById */
-				orderRepository.setCustomerIdNull(orderId);
-				orderRepository.setVendorIdNull(orderId);
-				Order order = findOrderById(orderId);/* calling method findOrderById */
-				System.out.println(order);
-				orderRepository.save(order);
-				orderRepository.deleteById(orderId);
-				return true;
-			}
-		} catch (NoSuchElementException e) {
-			throw new NoSuchOrderException(
-					"Order with " + orderId + " is not found"); /* Throwing and handling exception */
-		}
-
-		return true;
+	/* View Order sorted by Date */
+	public List<Order> findSortedOrderByDate() {
+		logger.info("findSortedOrderByDate() called");
+		return orderRepository.getOrderBySortedDate();
 	}
 
+	/* FInd Order using OrderID */
 	@Override
 	public Order findOrderById(int orderId) throws NoSuchOrderException {
 		logger.info("findOrderById() called");
@@ -215,37 +229,29 @@ public class AdminServiceImpl implements AdminService {
 		return null;
 	}
 
+	/* Remove Order Using Order ID */
 	@Override
-	/* Register Admin with their details */
-	public Admin registerAdmin(Admin admin) {
-		logger.info("registerAdmin() called");
-		Admin result = null;
-		if (isValidAdmin(admin)) {
-			logger.info("Valid Admin");
-			result = adminRepository.save(admin);
+	public boolean removeOrderByAdmin(int orderId) throws NoSuchOrderException {
+		logger.info("removeOrderByAdmin() called");
+		try {
+			if (isvalidOrderId(orderId)) {
+				logger.info("Valid Order Id");
+				orderRepository.setCustomerIdNull(orderId);
+				orderRepository.setVendorIdNull(orderId);
+				Order order = findOrderById(orderId);/* calling method findOrderById */
+				orderRepository.save(order);
+				orderRepository.deleteById(orderId);
+				return true;
+			}
+		} catch (NoSuchElementException e) {
+			throw new NoSuchOrderException(
+					"Order with " + orderId + " is not found"); /* Throwing and handling exception */
 		}
-		return result;
+
+		return true;
 	}
 
-	@Override
-	/* Find All Registered Admins with their details */
-	public List<Admin> findAllAdmins() {
-		logger.info("findAllAdmins() called");
-		return adminRepository.findAll();
-	}
-
-	@Override
-	public List<Object> findAllVendors() {
-		logger.info("findAllVendors() called");
-		return vendorRepository.viewAllVendors();
-	}
-
-	@Override
-	public List<Object> findAllCustomer() {
-		logger.info("findAllCustomer() called");
-		return customerRepository.viewAllCustomers();
-	}
-
+	/* Validate Admin */
 	private boolean isValidAdmin(Admin admin) {
 		logger.info("isValidAdmin() called");
 		if (!admin.getAdminName().matches("[A-Za-z]+ [A-Za-z]+"))
@@ -257,6 +263,7 @@ public class AdminServiceImpl implements AdminService {
 		return true;
 	}
 
+	/* Validate Vendor */
 	public boolean isValidVendor(Vendor vendor) {
 		logger.info("isValidVendor() called");
 		boolean flag = true;
@@ -272,6 +279,7 @@ public class AdminServiceImpl implements AdminService {
 		return flag;
 	}
 
+	/* Validate Order ID */
 	public boolean isvalidOrderId(int orderId) {
 		logger.info("isvalidOrderId() called");
 		if (orderId <= 0)
@@ -280,6 +288,7 @@ public class AdminServiceImpl implements AdminService {
 			return true;
 	}
 
+	/* Validate Vendor ID */
 	public boolean isvalidVendorId(int vendorId) {
 		logger.info("isvalidVendorId called");
 		if (vendorId <= 0)
@@ -288,6 +297,7 @@ public class AdminServiceImpl implements AdminService {
 			return true;
 	}
 
+	/* Validate Customer ID */
 	public boolean isvalidCustomerId(int customerId) {
 		logger.info("isvalidCustomerId called");
 		if (customerId <= 0)

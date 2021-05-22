@@ -57,6 +57,12 @@ public class Order {
 	@Column(name = "Order_Price", length = 10, nullable = false)
 	private double orderPrice;
 
+	/*
+	 * specifying column name, giving length and giving constraint as not null
+	 */
+	@Column(name = "OrderPayment_Status", length = 50, nullable = false)
+	private String orderPaymentStatus;
+
 	public String getOrderPaymentStatus() {
 		return orderPaymentStatus;
 	}
@@ -64,12 +70,6 @@ public class Order {
 	public void setOrderPaymentStatus(String orderPaymentStatus) {
 		this.orderPaymentStatus = orderPaymentStatus;
 	}
-
-	/*
-	 * specifying column name, giving length and giving constraint as not null
-	 */
-	@Column(name = "OrderPayment_Status", length = 50, nullable = false)
-	private String orderPaymentStatus;
 
 	@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 	@ManyToOne(cascade = CascadeType.ALL)

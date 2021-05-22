@@ -2,6 +2,7 @@ package com.capgemini.controller;
 
 import java.util.List;
 
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -25,7 +26,6 @@ import com.capgemini.exceptions.NoSuchOrderException;
 import com.capgemini.exceptions.NoSuchVendorException;
 import com.capgemini.service.AdminService;
 import com.capgemini.utilities.GlobalResources;
-import org.slf4j.Logger;
 
 @RestController
 @RequestMapping(path = "admins")
@@ -38,7 +38,7 @@ public class AdminController {
 
 	/*
 	 * // http://localhost:9090/GharKaKhana-api/admins/addAdmin
-	 */	
+	 */
 	@PostMapping(path = "/addAdmin", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Admin> addAdmin(@RequestBody Admin admin) {
 		logger.info("addAdmin() method is called");
@@ -48,10 +48,10 @@ public class AdminController {
 		else
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	}
-	
+
 	/*
 	 * http://localhost:9090/GharKaKhana-api/admins/loginAdmin/{adminId}/{password}
-	 */	 
+	 */
 	@PostMapping(path = "/loginAdmin/{adminId}/{password}")
 	public ResponseEntity<String> loginAdmin(@PathVariable("adminId") int adminId,
 			@PathVariable("password") String password) throws NoSuchAdminException {
@@ -64,8 +64,8 @@ public class AdminController {
 	}
 
 	/*
-	 * // http://localhost:9090/GharKaKhana-api/admins/addVendor
-	 */	
+	 * http://localhost:9090/GharKaKhana-api/admins/addVendor
+	 */
 	@PostMapping(path = "/addVendor", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Vendor> addVendor(@RequestBody Vendor vendor) {
 		logger.info("addVendor() method is called");
@@ -77,8 +77,8 @@ public class AdminController {
 	}
 
 	/*
-	 * // http://localhost:9090/GharKaKhana-api/admins/viewAllAdmin
-	 */	
+	 * http://localhost:9090/GharKaKhana-api/admins/viewAllAdmin
+	 */
 	@GetMapping(path = "/viewAllAdmin")
 	public ResponseEntity<List<Admin>> getAllAdmin() {
 		logger.info("getAllAdmin() method is called");
@@ -90,8 +90,8 @@ public class AdminController {
 	}
 
 	/*
-	 * // http://localhost:9090/GharKaKhana-api/admins/viewAllCustomer
-	 */	
+	 * http://localhost:9090/GharKaKhana-api/admins/viewAllCustomer
+	 */
 	@GetMapping(path = "/viewAllCustomer")
 	public ResponseEntity<List<Object>> getAllCustomer() {
 		logger.info("getAllCustomer() method is called");
@@ -103,8 +103,8 @@ public class AdminController {
 	}
 
 	/*
-	 * // http://localhost:9090/GharKaKhana-api/admins/viewAllVendor
-	 */	
+	 * http://localhost:9090/GharKaKhana-api/admins/viewAllVendor
+	 */
 	@GetMapping(path = "/viewAllVendor")
 	public ResponseEntity<List<Object>> getAllVendor() {
 		logger.info("getAllVendor() method is called");
@@ -116,8 +116,8 @@ public class AdminController {
 	}
 
 	/*
-	 * // http://localhost:9090/GharKaKhana-api/admins/deleteVendor/{vendorId}
-	 */	
+	 * http://localhost:9090/GharKaKhana-api/admins/deleteVendor/{vendorId}
+	 */
 	@DeleteMapping(path = "deleteVendor/{vendorId}")
 	public ResponseEntity<Boolean> deleteVendor(@PathVariable("vendorId") int vendorId) throws NoSuchVendorException {
 		logger.info("deleteVendor() method is called");
@@ -129,8 +129,8 @@ public class AdminController {
 	}
 
 	/*
-	 * // http://localhost:9090/GharKaKhana-api/admins/updateVendor/
-	 */	
+	 * http://localhost:9090/GharKaKhana-api/admins/updateVendor/
+	 */
 	@PutMapping(path = "/updateVendor", consumes = MediaType.APPLICATION_JSON_VALUE, produces = "application/json")
 	public ResponseEntity<Vendor> updateVendor(@RequestBody Vendor vendor) {
 		logger.info("updateVendor() method is called");
@@ -142,8 +142,8 @@ public class AdminController {
 	}
 
 	/*
-	 * // http://localhost:9090/GharKaKhana-api/admins/viewAllOrder
-	 */	
+	 * http://localhost:9090/GharKaKhana-api/admins/viewAllOrder
+	 */
 	@GetMapping(path = "/viewAllOrder")
 	public ResponseEntity<List<Order>> getAllOrder() {
 		logger.info("getAllOrder() method is called");
@@ -155,8 +155,8 @@ public class AdminController {
 	}
 
 	/*
-	 * // http://localhost:9090/GharKaKhana-api/admins/findVendorById/
-	 */	
+	 * http://localhost:9090/GharKaKhana-api/admins/findVendorById/
+	 */
 	@GetMapping(path = "findVendorById/{vendorId}")
 	public ResponseEntity<Vendor> getVendorById(@PathVariable("vendorId") int vendorId) throws NoSuchVendorException {
 		logger.info("getVendorById() method is called");
@@ -168,7 +168,7 @@ public class AdminController {
 	}
 
 	/*
-	 * // http://localhost:9090/GharKaKhana-api/admins/findOrderById/
+	 * http://localhost:9090/GharKaKhana-api/admins/findOrderById/
 	 */
 	@GetMapping(path = "findOrderById/{orderId}")
 	public ResponseEntity<Order> getOrderById(@PathVariable("orderId") int orderId) throws NoSuchOrderException {
@@ -181,8 +181,8 @@ public class AdminController {
 	}
 
 	/*
-	 * // http://localhost:9090/GharKaKhana-api/admins/findCustomerId/
-	 */	
+	 * http://localhost:9090/GharKaKhana-api/admins/findCustomerId/
+	 */
 	@GetMapping(path = "findCustomerId/{customerId}")
 	public ResponseEntity<Customer> getCustomerById(@PathVariable("customerId") int customerId)
 			throws NoSuchCustomerException {
@@ -195,8 +195,8 @@ public class AdminController {
 	}
 
 	/*
-	 * // http://localhost:9090/GharKaKhana-api/admins/findOrderByDate
-	 */	
+	 * http://localhost:9090/GharKaKhana-api/admins/findOrderByDate
+	 */
 	@GetMapping(path = "findOrderByDate")
 	public ResponseEntity<List<Order>> getOrderByDate() {
 		logger.info("getOrderByDate() method is called");
@@ -208,8 +208,8 @@ public class AdminController {
 	}
 
 	/*
-	 * // http://localhost:9090/GharKaKhana-api/admins/findOrderByAmount
-	 */	
+	 * http://localhost:9090/GharKaKhana-api/admins/findOrderByAmount
+	 */
 	@GetMapping(path = "findOrderByAmount")
 	public ResponseEntity<List<Order>> getOrderByAmount() {
 		logger.info("getOrderByAmount() method is called");
@@ -221,8 +221,8 @@ public class AdminController {
 	}
 
 	/*
-	 * // http://localhost:9090/GharKaKhana-api/admins/deleteOrderById/
-	 */	
+	 * http://localhost:9090/GharKaKhana-api/admins/deleteOrderById/
+	 */
 	@DeleteMapping(path = "deleteOrderById/{ordorId}")
 	public ResponseEntity<Boolean> deleteOrderById(@PathVariable("ordorId") int orderId) throws NoSuchOrderException {
 		logger.info("deleteOrderById() method is called");

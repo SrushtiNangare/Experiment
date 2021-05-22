@@ -13,7 +13,7 @@ public interface VendorService {
 	
 	public FoodItem addFood(FoodItem foodItem,int vendorId) throws NoSuchVendorException;
 
-	public FoodItem modifyFood(FoodItem foodItem) throws NoSuchFoodItemException;
+	public FoodItem modifyFood(FoodItem foodItem, int vendorId) throws NoSuchFoodItemException, NoSuchVendorException;
 
 	public boolean removeFood(int foodId) throws NoSuchFoodItemException;
 

@@ -19,6 +19,7 @@ import com.capgemini.repository.OrderRepository;
 import com.capgemini.repository.VendorRepository;
 import com.capgemini.utilities.GlobalResources;
 
+/*Vendor Service Implementation*/
 @Service
 public class VendorServiceImpl implements VendorService {
 
@@ -34,10 +35,11 @@ public class VendorServiceImpl implements VendorService {
 
 	@Autowired
 	private AdminService adminService;
-	
+
 	@Autowired
 	private VendorRepository vendorRepository;
-	
+
+	/* Vendor will login using ID and Password */
 	@Override
 	public String vendorLogin(int vendorId, String password) throws NoSuchVendorException {
 		logger.info("VendorLogin() called");
@@ -51,7 +53,8 @@ public class VendorServiceImpl implements VendorService {
 
 	@Override
 	/* Add Food to Menu by accepting values */
-	public FoodItem addFood(FoodItem foodItem,int vendorId) throws NoSuchVendorException {// this method should't be included
+	public FoodItem addFood(FoodItem foodItem, int vendorId) throws NoSuchVendorException {// this method should't be
+																							// included
 		logger.info("addFood() called");
 		Vendor vendor = adminService.findVendorById(vendorId);
 		foodItem.setVendor(vendor);
@@ -59,26 +62,11 @@ public class VendorServiceImpl implements VendorService {
 	}
 
 	@Override
-	public FoodItem findFoodById(int foodId) throws NoSuchFoodItemException {
-		logger.info("findFoodById() called");
-		try {
-			if (isvalidFoodId(foodId)) {
-				logger.info("Valid Food Id");
-				Optional<FoodItem> foodItem = foodItemRepository.findById(foodId);
-				if (foodItem.get() != null)
-					return foodItem.get();
-			}
-		} catch (NoSuchElementException e) {
-			throw new NoSuchFoodItemException("FoodItem with id " + foodId + " not found.");
-		}
-
-		return null;
-	}
-
-	@Override
-	/* Modify Food to Menu */
-	public FoodItem modifyFood(FoodItem foodItem) throws NoSuchFoodItemException {
+	/* Modify Food item from Menu */
+	public FoodItem modifyFood(FoodItem foodItem, int vendorId) throws NoSuchFoodItemException, NoSuchVendorException {
 		logger.info("modifyFood() called");
+		Vendor vendor = adminService.findVendorById(vendorId);
+		foodItem.setVendor(vendor);
 		return foodItemRepository.save(foodItem);
 	}
 
@@ -104,10 +92,28 @@ public class VendorServiceImpl implements VendorService {
 	}
 
 	@Override
-	/* View Menu */
+	/* View all the food items from the Menu */
 	public List<FoodItem> viewAllFoodItems() {
 		logger.info("viewAllMenu() called");
 		return foodItemRepository.findAll();
+	}
+
+	@Override
+	/* Find food item using foodId */
+	public FoodItem findFoodById(int foodId) throws NoSuchFoodItemException {
+		logger.info("findFoodById() called");
+		try {
+			if (isvalidFoodId(foodId)) {
+				logger.info("Valid Food Id");
+				Optional<FoodItem> foodItem = foodItemRepository.findById(foodId);
+				if (foodItem.get() != null)
+					return foodItem.get();
+			}
+		} catch (NoSuchElementException e) {
+			throw new NoSuchFoodItemException("FoodItem with id " + foodId + " not found.");
+		}
+
+		return null;
 	}
 
 	@Override
@@ -121,22 +127,24 @@ public class VendorServiceImpl implements VendorService {
 	}
 
 	@Override
-	/* View all Order */
-	public List<Order> viewAllOrder(int vendorId) {
-		logger.info("viewOrder() called");
-		return orderRepository.findAllVendorOrders(vendorId);
-	}
-
-	@Override
+	/* Vendor will set the order payment status */
 	public boolean setOrderPaymentStatus(int orderId, String status) throws NoSuchOrderException {
 		Order order1 = null;
 		order1 = adminService.findOrderById(orderId);
 		order1.setOrderPaymentStatus(status);
 		orderRepository.save(order1);
 		return true;
-		
+
 	}
 
+	@Override
+	/* View all Orders */
+	public List<Order> viewAllOrder(int vendorId) {
+		logger.info("viewOrder() called");
+		return orderRepository.findAllVendorOrders(vendorId);
+	}
+
+	/* Validation for Food ID */
 	public boolean isvalidFoodId(int foodId) {
 		if (foodId <= 0)
 			return false;
