@@ -306,4 +306,15 @@ public class AdminServiceImpl implements AdminService {
 			return true;
 	}
 
+	@Override
+	public String adminLogin2(String userName, String password) {
+		logger.info("AdminLogin() called");
+		Admin admin = adminRepository.getAdminData(userName);
+		String user = adminRepository.getUserName(userName);
+		if (admin.getAdminUsername().equals(user) && admin.getAdminPassword().equals(password))
+			return "Login Successful";
+		else
+			return "Invalid UserId or Password";
+	}
+
 }

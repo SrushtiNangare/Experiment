@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,6 +25,7 @@ import com.capgemini.exceptions.NoSuchOrderException;
 import com.capgemini.service.CustomerService;
 import com.capgemini.utilities.GlobalResources;
 
+@CrossOrigin
 @RestController
 @RequestMapping(path = "customers")
 public class CustomerController {
@@ -55,9 +57,9 @@ public class CustomerController {
 		logger.info("login() called");
 		String result = service.customerLogin(customerId, password);
 		if (result != null)
-			return new ResponseEntity<>(result, HttpStatus.ACCEPTED);
+			return new ResponseEntity<>(result, HttpStatus.OK);
 		else
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	/*
@@ -180,5 +182,15 @@ public class CustomerController {
 			return new ResponseEntity<>(result, HttpStatus.ACCEPTED);
 		else
 			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+	}
+	
+	//http://localhost:9090/GharKaKhana-api/customers/loginCustomer2/{userName}/{password}
+	@PostMapping(path = "/loginCustomer2/{userName}/{password}")
+	public ResponseEntity<String> loginCust(@PathVariable("userName") String userName,@PathVariable("password") String password){
+		String result = service.customerLogin2(userName, password);
+		if(result != null)
+			return new ResponseEntity<>(result,HttpStatus.OK);
+		else 
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 }

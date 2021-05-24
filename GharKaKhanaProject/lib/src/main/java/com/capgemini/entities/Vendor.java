@@ -38,7 +38,7 @@ public class Vendor {
 	/*
 	 * specifying column name, giving length and giving constraint as not null
 	 */
-	@Column(name = "Vendor_Username", length = 25, nullable = false)
+	@Column(unique= true ,name = "Vendor_Username", length = 25, nullable = false)
 	private String vendorUsername;
 
 	/*

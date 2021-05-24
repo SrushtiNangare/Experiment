@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,6 +25,7 @@ import com.capgemini.exceptions.NoSuchVendorException;
 import com.capgemini.service.VendorService;
 import com.capgemini.utilities.GlobalResources;
 
+@CrossOrigin
 @RestController
 @RequestMapping(path = "vendors")
 public class VendorController {
@@ -151,5 +153,15 @@ public class VendorController {
 		else
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	}
+	
+	//http://localhost:9090/GharKaKhana-api/vendors/loginVendor2/{userName}/{password}
+		@PostMapping(path = "/loginVendor2/{userName}/{password}")
+		public ResponseEntity<String> loginVendor2(@PathVariable("userName") String userName,@PathVariable("password") String password){
+			String result = vendorService.vendorLogin2(userName, password);
+			if(result != null)
+				return new ResponseEntity<>(result,HttpStatus.OK);
+			else 
+				return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 
 }

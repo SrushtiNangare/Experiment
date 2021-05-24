@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.capgemini.entities.Customer;
 import com.capgemini.entities.FoodItem;
 import com.capgemini.entities.Order;
 import com.capgemini.entities.Vendor;
@@ -50,7 +51,17 @@ public class VendorServiceImpl implements VendorService {
 		else
 			return "Invalid UserId or Password";
 	}
-
+	
+	@Override
+	public String vendorLogin2(String userName, String password) {
+		logger.info("vendorLogin2() called");
+		Vendor vendor = vendorRepository.getVendorData(userName);
+		String user= vendorRepository.getUserName(userName);
+		if (vendor.getVendorUsername().equals(user) && vendor.getVendorPassword().equals(password))
+			return "Login Successful";
+		else
+			return "Invalid Customer";
+	}
 	@Override
 	/* Add Food to Menu by accepting values */
 	public FoodItem addFood(FoodItem foodItem, int vendorId) throws NoSuchVendorException {// this method should't be

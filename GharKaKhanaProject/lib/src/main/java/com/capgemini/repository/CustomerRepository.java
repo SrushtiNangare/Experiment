@@ -13,8 +13,14 @@ import com.capgemini.entities.Customer;
 
 public interface CustomerRepository extends JpaRepository<Customer, Integer> {
 
-	@Query("SELECT c.password from Customer c Where c.password=:password")
-	public String getPassword(@Param("password") String password);
+	@Query("SELECT c.password from Customer c Where c.customerId=:customerId")
+	public String getPassword(@Param("customerId") int customerId);
+	
+	@Query("SELECT c.userName from Customer c WHERE c.userName=:userName")
+	public String getUserName(@Param("userName") String userName);
+	
+	@Query("SELECT c from Customer c WHERE c.userName=:userName")
+	public Customer getCustomerData(@Param("userName") String userName);
 	
 	@Query("SELECT "
 			+ "c.customerId, "

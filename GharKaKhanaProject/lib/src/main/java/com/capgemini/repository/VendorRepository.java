@@ -15,6 +15,11 @@ public interface VendorRepository extends JpaRepository<Vendor, Integer> {
 	@Query("SELECT v.vendorPassword from Vendor v Where v.vendorPassword=:password")
 	public String getPassword(@Param("password") String password);
 	
+	@Query("SELECT c.vendorUsername from Vendor c WHERE c.vendorUsername=:vendorUsername")
+	public String getUserName(@Param("vendorUsername") String vendorUsername);
+	
+	@Query("SELECT c from Vendor c WHERE c.vendorUsername=:vendorUsername")
+	public Vendor getVendorData(@Param("vendorUsername") String vendorUsername);
 	@Query("SELECT "
 			+ "v.vendorId, "
 			+ "v.vendorName, "

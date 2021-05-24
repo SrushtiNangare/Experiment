@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -45,7 +46,9 @@ public class Customer {
 	/*
 	 * specifying column name, giving length and giving constraint as not null
 	 */
-	@Column(name = "User_Name", length = 25, nullable = false)
+	
+	//@Column()
+	@Column(unique = true ,name = "User_Name", length = 25, nullable = false)
 	private String userName;
 
 	/*

@@ -32,5 +32,7 @@ public interface CustomerService {
 			throws NoSuchOrderException;
 
 	public List<Order> findAllOrder(int customerId);
+	
+	public String customerLogin2(String userName, String password);
 
 }

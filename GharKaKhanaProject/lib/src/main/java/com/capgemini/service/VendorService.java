@@ -26,5 +26,7 @@ public interface VendorService {
 	public List<Order> viewAllOrder(int vendorId);
 
 	public FoodItem findFoodById(int foodId) throws NoSuchFoodItemException;
+	
+	public String vendorLogin2(String userName, String password);
 
 }

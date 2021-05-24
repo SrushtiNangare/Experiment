@@ -43,4 +43,6 @@ public interface AdminService {
 	public List<Object> findAllVendors(); // done
 
 	public List<Object> findAllCustomer();// done
+	
+	public String adminLogin2(String userName, String password);
 }

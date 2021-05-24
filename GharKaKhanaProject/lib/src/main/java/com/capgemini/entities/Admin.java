@@ -30,7 +30,7 @@ public class Admin {
 	/*
 	 * specifying column name, giving length and giving constraint as not null
 	 */
-	@Column(name = "Admin_Username", length = 25, nullable = false)
+	@Column(unique= true ,name = "Admin_Username", length = 25, nullable = false)
 	private String adminUsername;
 
 	/*
