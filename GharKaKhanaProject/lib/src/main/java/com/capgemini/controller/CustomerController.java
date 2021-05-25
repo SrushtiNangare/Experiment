@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.capgemini.entities.Customer;
 import com.capgemini.entities.FoodItem;
 import com.capgemini.entities.Order;
-import com.capgemini.exceptions.NoSuchCustomerException;
 import com.capgemini.exceptions.NoSuchDishException;
 import com.capgemini.exceptions.NoSuchOrderException;
 import com.capgemini.service.CustomerService;
@@ -48,19 +47,15 @@ public class CustomerController {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	}
 
-	/*
-	 * http://localhost:9090/GharKaKhana-api/customers/loginCustomer/{customerId}/{password}
-	 */
-	@PostMapping(path = "/loginCustomer/{customerId}/{password}")
-	public ResponseEntity<String> login(@PathVariable("customerId") int customerId,
-			@PathVariable("password") String password) throws NoSuchCustomerException {
-		logger.info("login() called");
-		String result = service.customerLogin(customerId, password);
-		if (result != null)
-			return new ResponseEntity<>(result, HttpStatus.OK);
-		else
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-	}
+	//http://localhost:9090/GharKaKhana-api/customers/loginCustomer2/{userName}/{password}
+		@PostMapping(path = "/loginCustomer2/{userName}/{password}")
+		public ResponseEntity<String> loginCust(@PathVariable("userName") String userName,@PathVariable("password") String password){
+			String result = service.customerLogin(userName, password);
+			if(result != null)
+				return new ResponseEntity<>(result,HttpStatus.OK);
+			else 
+				return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 
 	/*
 	 * http://localhost:9090/GharKaKhana-api/customers//placeOrder/{customerId}/{vendorId}
@@ -121,9 +116,9 @@ public class CustomerController {
 	 * http://localhost:9090/GharKaKhana-api/customers/sortDishByPrice
 	 */
 	@GetMapping(path = "/sortDishByPrice")
-	public ResponseEntity<List<Object>> sortDishByPrice() {
+	public ResponseEntity<List<FoodItem>> sortDishByPrice() {
 		logger.info("sortDishByPrice() called");
-		List<Object> result = service.viewDishesSortByPrice();
+		List<FoodItem> result = service.viewDishesSortByPrice();
 		if (result != null)
 			return new ResponseEntity<>(result, HttpStatus.OK);
 		else
@@ -147,9 +142,9 @@ public class CustomerController {
 	 * http://localhost:9090/GharKaKhana-api/customers/viewAllFoodItem
 	 */
 	@GetMapping(path = "/viewAllFoodItem")
-	public ResponseEntity<List<Object>> viewAllFoodItem() {
+	public ResponseEntity<List<FoodItem>> viewAllFoodItem() {
 		logger.info("getAllOrder() called");
-		List<Object> result = service.viewMenu();
+		List<FoodItem> result = service.viewMenu();
 		if (result != null)
 			return new ResponseEntity<>(result, HttpStatus.OK);
 		else
@@ -184,13 +179,4 @@ public class CustomerController {
 			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
 	}
 	
-	//http://localhost:9090/GharKaKhana-api/customers/loginCustomer2/{userName}/{password}
-	@PostMapping(path = "/loginCustomer2/{userName}/{password}")
-	public ResponseEntity<String> loginCust(@PathVariable("userName") String userName,@PathVariable("password") String password){
-		String result = service.customerLogin2(userName, password);
-		if(result != null)
-			return new ResponseEntity<>(result,HttpStatus.OK);
-		else 
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-	}
 }

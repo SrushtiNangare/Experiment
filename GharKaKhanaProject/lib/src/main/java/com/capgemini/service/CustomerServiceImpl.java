@@ -15,7 +15,6 @@ import com.capgemini.entities.Customer;
 import com.capgemini.entities.FoodItem;
 import com.capgemini.entities.Order;
 import com.capgemini.entities.Vendor;
-import com.capgemini.exceptions.NoSuchCustomerException;
 import com.capgemini.exceptions.NoSuchDishException;
 import com.capgemini.exceptions.NoSuchOrderException;
 import com.capgemini.repository.CustomerRepository;
@@ -55,7 +54,7 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 	
 	@Override
-	public String customerLogin2(String userName, String password) {
+	public String customerLogin(String userName, String password) {
 		logger.info("customerLogin() called");
 		Customer customer = customerRepository.getCustomerData(userName);
 		String user= customerRepository.getUserName(userName);
@@ -65,17 +64,6 @@ public class CustomerServiceImpl implements CustomerService {
 			return "Invalid Customer";
 	}
 
-	@Override
-	/* Customer will login with their ID and Password */
-	public String customerLogin(int customerId, String password) throws NoSuchCustomerException {
-		logger.info("customerLogin() called");
-		Customer customer = adminService.findCustomerById(customerId);
-		String pass = customerRepository.getPassword(customerId);
-		if (customer.getPassword().equals(pass))
-			return "Login Successful";
-		else
-			return "Invalid Customer";
-	}
 
 	/* Place Order by selecting dishes from menu */
 	@Override
@@ -201,14 +189,14 @@ public class CustomerServiceImpl implements CustomerService {
 
 	/* View All Food Items from the menu */
 	@Override
-	public List<Object> viewMenu() {
+	public List<FoodItem> viewMenu() {
 		logger.info("veiwMenu() called");
 		return foodItemRepository.viewMenu();
 	}
 
 	@Override
 	/* View Dishes by Price in Ascending or Descending Order */
-	public List<Object> viewDishesSortByPrice() {
+	public List<FoodItem> viewDishesSortByPrice() {
 		logger.info("viewDishesSortByPrice() called");
 		return foodItemRepository.getDishesBySortedAmount();
 	}

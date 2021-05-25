@@ -95,9 +95,9 @@ public class AdminController {
 	 * http://localhost:9090/GharKaKhana-api/admins/viewAllCustomer
 	 */
 	@GetMapping(path = "/viewAllCustomer")
-	public ResponseEntity<List<Object>> getAllCustomer() {
+	public ResponseEntity<List<Customer>> getAllCustomer() {
 		logger.info("getAllCustomer() method is called");
-		List<Object> result = adminService.findAllCustomer();
+		List<Customer> result = adminService.findAllCustomer();
 		if (result != null)
 			return new ResponseEntity<>(result, HttpStatus.FOUND);
 		else
@@ -108,9 +108,9 @@ public class AdminController {
 	 * http://localhost:9090/GharKaKhana-api/admins/viewAllVendor
 	 */
 	@GetMapping(path = "/viewAllVendor")
-	public ResponseEntity<List<Object>> getAllVendor() {
+	public ResponseEntity<List<Vendor>> getAllVendor() {
 		logger.info("getAllVendor() method is called");
-		List<Object> result = adminService.findAllVendors();
+		List<Vendor> result = adminService.findAllVendors();
 		if (result != null)
 			return new ResponseEntity<>(result, HttpStatus.FOUND);
 		else

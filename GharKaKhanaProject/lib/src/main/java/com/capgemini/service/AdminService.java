@@ -40,9 +40,9 @@ public interface AdminService {
 
 	public List<Admin> findAllAdmins(); // done
 
-	public List<Object> findAllVendors(); // done
+	public List<Vendor> findAllVendors(); // done
 
-	public List<Object> findAllCustomer();// done
+	public List<Customer> findAllCustomer();// done
 	
 	public String adminLogin2(String userName, String password);
 }

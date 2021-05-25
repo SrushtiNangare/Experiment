@@ -25,5 +25,5 @@ public interface VendorRepository extends JpaRepository<Vendor, Integer> {
 			+ "v.vendorName, "
 			+ "v.vendorContact, "
 			+ "v.vendorAddress FROM Vendor v")
-	public List<Object> viewAllVendors();
+	public List<Vendor> viewAllVendors();
 }

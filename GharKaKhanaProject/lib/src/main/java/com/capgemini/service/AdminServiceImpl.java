@@ -106,7 +106,7 @@ public class AdminServiceImpl implements AdminService {
 
 	/* View All Vendors */
 	@Override
-	public List<Object> findAllVendors() {
+	public List<Vendor> findAllVendors() {
 		logger.info("findAllVendors() called");
 		return vendorRepository.viewAllVendors();
 	}
@@ -163,7 +163,7 @@ public class AdminServiceImpl implements AdminService {
 
 	/* View All customers */
 	@Override
-	public List<Object> findAllCustomer() {
+	public List<Customer> findAllCustomer() {
 		logger.info("findAllCustomer() called");
 		return customerRepository.viewAllCustomers();
 	}

@@ -12,19 +12,19 @@ import com.capgemini.exceptions.NoSuchOrderException;
 public interface CustomerService {
 	public Customer registerCustomer(Customer customer);
 
-	public String customerLogin(int customerId, String password) throws NoSuchCustomerException;
+	public String customerLogin(String userName, String password);
 
 	public Order placeOrder(int customerId, List<FoodItem> foodItems, int vendorId);
 
 	public String cancelOrder(int orderId, String status) throws NoSuchOrderException;
 
-	public List<Object> viewDishesSortByPrice();
+	public List<FoodItem> viewDishesSortByPrice();
 
 	public List<FoodItem> searchDishes(String foodName) throws NoSuchDishException;
 
 	public String viewOrderStatusById(int orderId) throws NoSuchOrderException;
 
-	public List<Object> viewMenu();
+	public List<FoodItem> viewMenu();
 
 	public Order findOrderById(int orderId) throws NoSuchOrderException;
 
@@ -33,6 +33,5 @@ public interface CustomerService {
 
 	public List<Order> findAllOrder(int customerId);
 	
-	public String customerLogin2(String userName, String password);
 
 }
