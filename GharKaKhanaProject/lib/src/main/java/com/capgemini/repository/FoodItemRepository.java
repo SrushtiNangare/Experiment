@@ -12,7 +12,7 @@ import com.capgemini.entities.FoodItem;
 @Repository
 public interface FoodItemRepository extends JpaRepository<FoodItem, Integer> {
 
-	@Query("SELECT m.foodName, m.foodPrice FROM FoodItem m ORDER BY m.foodPrice ASC")
+	@Query("SELECT m FROM FoodItem m ORDER BY m.foodPrice ASC")
 	List<FoodItem> getDishesBySortedAmount();
 
 	@Query("SELECT m FROM FoodItem m Where m.foodName =:foodName")
@@ -21,9 +21,13 @@ public interface FoodItemRepository extends JpaRepository<FoodItem, Integer> {
 	@Query("SELECT m.foodPrice FROM FoodItem m Where m.foodName =:foodName")
 	public double getFoodPriceByName(@Param("foodName") String foodName);
 
-	@Query("SELECT m.foodId, m.foodName, m.foodPrice FROM FoodItem m ")
+	@Query("SELECT m FROM FoodItem m ")
 	public List<FoodItem> viewMenu();
 	
 	@Query("SELECT m FROM FoodItem m ORDER BY m.foodId")
 	public List<FoodItem> items();
+	
+	@Query("SELECT m FROM FoodItem m Where m.vendor.vendorId =:vendorId")
+	public List<FoodItem> findItemByVendorId(@Param("vendorId") int vendorId);
+		
 }

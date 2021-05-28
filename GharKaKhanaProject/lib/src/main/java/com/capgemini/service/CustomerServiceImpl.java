@@ -61,7 +61,7 @@ public class CustomerServiceImpl implements CustomerService {
 		if (customer.getUserName().equals(user) && customer.getPassword().equals(password))
 			return "Login Successful";
 		else
-			return "Invalid Customer";
+			return null;
 	}
 
 

@@ -35,38 +35,50 @@ public class VendorController {
 
 	private Logger logger = GlobalResources.getLogger(VendorController.class);
 
-	/*
-	 * http://localhost:9090/GharKaKhana-api/vendors/loginVendor/{vendorId}/{password}
-	 */
-	@PostMapping(path = "/loginVendor/{vendorId}/{password}")
-	public ResponseEntity<String> loginVendor(@PathVariable("vendorId") int vendorId,
-			@PathVariable("password") String password) throws NoSuchVendorException {
-		logger.info("login() called");
-		String result = vendorService.vendorLogin(vendorId, password);
+	// http://localhost:9090/GharKaKhana-api/vendors/loginVendor/{userName}/{password}
+	@PostMapping(path = "/loginVendor/{userName}/{password}")
+	public ResponseEntity<String> loginVendor(@PathVariable("userName") String userName,
+			@PathVariable("password") String password) {
+		String result = vendorService.vendorLogin(userName, password);
 		if (result != null)
-			return new ResponseEntity<>(result, HttpStatus.ACCEPTED);
+			return new ResponseEntity<>(result, HttpStatus.OK);
 		else
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	/*
-	 * http://localhost:9090/GharKaKhana-api/vendors/findFoodId/
+	 * http://localhost:9090/GharKaKhana-api/vendors/findFoodId/{foodId}
 	 */
 	@GetMapping(path = "findFoodId/{foodId}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<FoodItem> getFoodById(@PathVariable("foodId") int foodId) throws NoSuchFoodItemException {
 		logger.info("getFoodById() called");
 		FoodItem result = vendorService.findFoodById(foodId);
 		if (result != null)
-			return new ResponseEntity<>(result, HttpStatus.FOUND);
+			return new ResponseEntity<>(result, HttpStatus.OK);
 		else
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	}
+
+	//http://localhost:9090/GharKaKhana-api/vendors/findFoodItemByVendorId/{vendorId}
+	@GetMapping(path = "findFoodItemByVendorId/{vendorId}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<FoodItem>> findFoodItemByVendorId(@PathVariable("vendorId") int vendorId) {
+		logger.info("getFoodById() called");
+		List<FoodItem> result = vendorService.findFoodItemById(vendorId);
+		System.out.println(result);
+		if (result != null)
+			return new ResponseEntity<>(result, HttpStatus.OK);
+		else
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+	
+
 
 	/*
 	 * http://localhost:9090/GharKaKhana-api/vendors//addFoodItem/{vendorId}
 	 */
 	@PostMapping(path = "/addFoodItem/{vendorId}")
-	public ResponseEntity<FoodItem> addFoodItem(@RequestBody FoodItem foodItem, @PathVariable("vendorId") int vendorId) throws NoSuchVendorException {
+	public ResponseEntity<FoodItem> addFoodItem(@RequestBody FoodItem foodItem, @PathVariable("vendorId") int vendorId)
+			throws NoSuchVendorException {
 		logger.info("addFoodItem() called");
 		FoodItem result = vendorService.addFood(foodItem, vendorId);
 		if (result != null)
@@ -90,10 +102,11 @@ public class VendorController {
 	}
 
 	/*
-	 * http://localhost:9090/GharKaKhana-api/vendors/updateFood/
+	 * http://localhost:9090/GharKaKhana-api/vendors/updateFood/{vendorId}
 	 */
-	@PutMapping(path = "/updateFood", consumes = MediaType.APPLICATION_JSON_VALUE, produces = "application/json")
-	public ResponseEntity<FoodItem> modifyFood(@RequestBody FoodItem foodItem, @PathVariable("vendorId") int vendorId) throws NoSuchFoodItemException, NoSuchVendorException {
+	@PutMapping(path = "/updateFood/{vendorId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = "application/json")
+	public ResponseEntity<FoodItem> modifyFood(@RequestBody FoodItem foodItem, @PathVariable("vendorId") int vendorId)
+			throws NoSuchFoodItemException, NoSuchVendorException {
 		FoodItem result = vendorService.modifyFood(foodItem, vendorId);
 		if (result != null)
 			return new ResponseEntity<>(result, HttpStatus.CREATED);
@@ -111,7 +124,7 @@ public class VendorController {
 		if (result)
 			return new ResponseEntity<>(result, HttpStatus.OK);
 		else
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	/*
@@ -128,8 +141,7 @@ public class VendorController {
 	}
 
 	/*
-	 * http://localhost:9090/GharKaKhana-api/vendors/setOrderPaymentStatus/orderId/
-	 * status
+	 * http://localhost:9090/GharKaKhana-api/vendors/setOrderPaymentStatus/orderId/status
 	 */
 	@PutMapping(path = "/setOrderPaymentStatus/{orderId}/{status}")
 	public ResponseEntity<Boolean> setOrderPaymentStatus(@PathVariable("orderId") int orderId,
@@ -153,15 +165,5 @@ public class VendorController {
 		else
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	}
-	
-	//http://localhost:9090/GharKaKhana-api/vendors/loginVendor2/{userName}/{password}
-		@PostMapping(path = "/loginVendor2/{userName}/{password}")
-		public ResponseEntity<String> loginVendor2(@PathVariable("userName") String userName,@PathVariable("password") String password){
-			String result = vendorService.vendorLogin2(userName, password);
-			if(result != null)
-				return new ResponseEntity<>(result,HttpStatus.OK);
-			else 
-				return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-		}
 
 }

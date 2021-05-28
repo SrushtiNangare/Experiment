@@ -14,7 +14,7 @@ import com.capgemini.exceptions.NoSuchVendorException;
 public interface AdminService {
 	public Vendor addVendor(Vendor vendor); // done
 	
-	public String adminLogin(int adminId, String password) throws NoSuchAdminException ;//done
+	public String adminLogin(String userName, String password) ;//done
 
 	public boolean removeVendor(int vendorId) throws NoSuchVendorException; // done
 
@@ -44,5 +44,4 @@ public interface AdminService {
 
 	public List<Customer> findAllCustomer();// done
 	
-	public String adminLogin2(String userName, String password);
 }

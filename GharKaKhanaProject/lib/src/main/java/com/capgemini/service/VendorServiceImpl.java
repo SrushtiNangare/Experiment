@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.capgemini.entities.Customer;
 import com.capgemini.entities.FoodItem;
 import com.capgemini.entities.Order;
 import com.capgemini.entities.Vendor;
@@ -40,28 +39,24 @@ public class VendorServiceImpl implements VendorService {
 	@Autowired
 	private VendorRepository vendorRepository;
 
-	/* Vendor will login using ID and Password */
+	/* Vendor will login using Username and Password */
 	@Override
-	public String vendorLogin(int vendorId, String password) throws NoSuchVendorException {
-		logger.info("VendorLogin() called");
-		Vendor vendor = adminService.findVendorById(vendorId);
-		String pass = vendorRepository.getPassword(password);
-		if (vendor.getVendorPassword().equals(pass))
-			return "Login Successful";
-		else
-			return "Invalid UserId or Password";
-	}
-	
-	@Override
-	public String vendorLogin2(String userName, String password) {
-		logger.info("vendorLogin2() called");
+	public String vendorLogin(String userName, String password) {
+		logger.info("vendorLogin() called");
 		Vendor vendor = vendorRepository.getVendorData(userName);
 		String user= vendorRepository.getUserName(userName);
 		if (vendor.getVendorUsername().equals(user) && vendor.getVendorPassword().equals(password))
 			return "Login Successful";
 		else
-			return "Invalid Customer";
+			return null;
 	}
+	
+	@Override
+	public List<FoodItem> findFoodItemById(int vendorId) {
+		return foodItemRepository.findItemByVendorId(vendorId);
+	}
+	
+	
 	@Override
 	/* Add Food to Menu by accepting values */
 	public FoodItem addFood(FoodItem foodItem, int vendorId) throws NoSuchVendorException {// this method should't be
@@ -87,9 +82,11 @@ public class VendorServiceImpl implements VendorService {
 		logger.info("removeFood() called");
 		try {
 			if (isvalidFoodId(foodId)) {
+				
 				logger.info("Valid Food Id");
 				FoodItem foodItem = findFoodById(foodId); /* calling method findMenuById */
 				if (foodItem != null) {
+					foodItem.setVendor(null);
 					foodItemRepository.delete(foodItem);
 					return true;
 				}

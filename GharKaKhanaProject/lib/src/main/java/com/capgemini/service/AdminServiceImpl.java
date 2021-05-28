@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.capgemini.entities.Admin;
 import com.capgemini.entities.Customer;
+import com.capgemini.entities.FoodItem;
 import com.capgemini.entities.Order;
 import com.capgemini.entities.Vendor;
 import com.capgemini.exceptions.NoSuchAdminException;
@@ -20,6 +21,7 @@ import com.capgemini.exceptions.NoSuchOrderException;
 import com.capgemini.exceptions.NoSuchVendorException;
 import com.capgemini.repository.AdminRepository;
 import com.capgemini.repository.CustomerRepository;
+import com.capgemini.repository.FoodItemRepository;
 import com.capgemini.repository.OrderRepository;
 import com.capgemini.repository.VendorRepository;
 import com.capgemini.utilities.GlobalResources;
@@ -40,6 +42,9 @@ public class AdminServiceImpl implements AdminService {
 
 	@Autowired
 	private AdminRepository adminRepository;
+	
+	@Autowired
+	private FoodItemRepository foodItemRepository;
 
 	@Autowired
 	private AdminService adminService;
@@ -58,16 +63,16 @@ public class AdminServiceImpl implements AdminService {
 		return result;
 	}
 
-	/* Admin will login using ID and Password */
+	/* Admin will login using Username and Password */
 	@Override
-	public String adminLogin(int adminId, String password) throws NoSuchAdminException {
+	public String adminLogin(String userName, String password) {
 		logger.info("AdminLogin() called");
-		Admin admin = adminService.findAdminById(adminId);
-		String pass = adminRepository.getPassword(password);
-		if (admin.getAdminPassword().equals(pass))
+		Admin admin = adminRepository.getAdminData(userName);
+		String user = adminRepository.getUserName(userName);
+		if (admin.getAdminUsername().equals(user) && admin.getAdminPassword().equals(password))
 			return "Login Successful";
 		else
-			return "Invalid UserId or Password";
+			return null;
 	}
 
 	@Override
@@ -108,7 +113,7 @@ public class AdminServiceImpl implements AdminService {
 	@Override
 	public List<Vendor> findAllVendors() {
 		logger.info("findAllVendors() called");
-		return vendorRepository.viewAllVendors();
+		return vendorRepository.findAll();
 	}
 
 	/* Find Vendor Using VendorId */
@@ -144,11 +149,15 @@ public class AdminServiceImpl implements AdminService {
 	@Override
 	/* Deletes vendor by accepting Vendor Id */
 	public boolean removeVendor(int vendorId) throws NoSuchVendorException {
+		
 		logger.info("removeVendor() called");
 		try {
 			if (isvalidVendorId(vendorId)) {
 				Vendor vendor = findVendorById(vendorId); /* calling method findVendorById */
 				if (vendor != null) {
+					vendor.setVendorAddress(null);
+					List<FoodItem> item = foodItemRepository.findItemByVendorId(vendorId);
+					item.removeAll(item);
 					vendorRepository.delete(vendor);
 					return true;
 				}
@@ -236,10 +245,10 @@ public class AdminServiceImpl implements AdminService {
 		try {
 			if (isvalidOrderId(orderId)) {
 				logger.info("Valid Order Id");
-				orderRepository.setCustomerIdNull(orderId);
-				orderRepository.setVendorIdNull(orderId);
 				Order order = findOrderById(orderId);/* calling method findOrderById */
-				orderRepository.save(order);
+				order.setCustomer(null);
+				order.setVendor(null);
+				order.setFoodItems(null);
 				orderRepository.deleteById(orderId);
 				return true;
 			}
@@ -304,17 +313,6 @@ public class AdminServiceImpl implements AdminService {
 			return false;
 		else
 			return true;
-	}
-
-	@Override
-	public String adminLogin2(String userName, String password) {
-		logger.info("AdminLogin() called");
-		Admin admin = adminRepository.getAdminData(userName);
-		String user = adminRepository.getUserName(userName);
-		if (admin.getAdminUsername().equals(user) && admin.getAdminPassword().equals(password))
-			return "Login Successful";
-		else
-			return "Invalid UserId or Password";
 	}
 
 }

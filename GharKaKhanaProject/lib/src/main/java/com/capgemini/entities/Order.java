@@ -99,7 +99,7 @@ public class Order {
 
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinTable(name = "food_orders", joinColumns = { @JoinColumn(name = "order_id") }, inverseJoinColumns = {
-			@JoinColumn(name = "food_id") })
+	@JoinColumn(name = "food_id") })
 	private List<FoodItem> foodItems = new ArrayList<>();
 
 	public List<FoodItem> getFoodItems() {

@@ -9,7 +9,7 @@ import com.capgemini.exceptions.NoSuchOrderException;
 import com.capgemini.exceptions.NoSuchVendorException;
 
 public interface VendorService {
-	public String vendorLogin(int vendorId, String password) throws NoSuchVendorException;
+	public String vendorLogin(String userName, String password);
 	
 	public FoodItem addFood(FoodItem foodItem,int vendorId) throws NoSuchVendorException;
 
@@ -27,6 +27,6 @@ public interface VendorService {
 
 	public FoodItem findFoodById(int foodId) throws NoSuchFoodItemException;
 	
-	public String vendorLogin2(String userName, String password);
+	public List<FoodItem> findFoodItemById(int vendorId);
 
 }

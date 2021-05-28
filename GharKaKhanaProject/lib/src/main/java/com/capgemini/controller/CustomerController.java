@@ -47,9 +47,9 @@ public class CustomerController {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	}
 
-	//http://localhost:9090/GharKaKhana-api/customers/loginCustomer2/{userName}/{password}
-		@PostMapping(path = "/loginCustomer2/{userName}/{password}")
-		public ResponseEntity<String> loginCust(@PathVariable("userName") String userName,@PathVariable("password") String password){
+	//http://localhost:9090/GharKaKhana-api/customers/loginCustomer/{userName}/{password}
+		@PostMapping(path = "/loginCustomer/{userName}/{password}")
+		public ResponseEntity<String> loginCustomer(@PathVariable("userName") String userName,@PathVariable("password") String password){
 			String result = service.customerLogin(userName, password);
 			if(result != null)
 				return new ResponseEntity<>(result,HttpStatus.OK);

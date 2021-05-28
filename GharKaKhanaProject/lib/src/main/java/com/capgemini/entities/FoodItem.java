@@ -13,6 +13,8 @@ import javax.persistence.Table;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Component
 @Entity
 @Scope(scopeName = "prototype")
@@ -62,10 +64,12 @@ public class FoodItem {
 
 	}
 
+	@JsonIgnore
 	public Vendor getVendor() {
 		return vendor;
 	}
 
+	@JsonIgnore
 	public void setVendor(Vendor vendor) {
 		this.vendor = vendor;
 	}

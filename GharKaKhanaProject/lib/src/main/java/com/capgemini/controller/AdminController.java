@@ -21,7 +21,6 @@ import com.capgemini.entities.Admin;
 import com.capgemini.entities.Customer;
 import com.capgemini.entities.Order;
 import com.capgemini.entities.Vendor;
-import com.capgemini.exceptions.NoSuchAdminException;
 import com.capgemini.exceptions.NoSuchCustomerException;
 import com.capgemini.exceptions.NoSuchOrderException;
 import com.capgemini.exceptions.NoSuchVendorException;
@@ -51,19 +50,15 @@ public class AdminController {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	}
 
-	/*
-	 * http://localhost:9090/GharKaKhana-api/admins/loginAdmin/{adminId}/{password}
-	 */
-	@PostMapping(path = "/loginAdmin/{adminId}/{password}")
-	public ResponseEntity<String> loginAdmin(@PathVariable("adminId") int adminId,
-			@PathVariable("password") String password) throws NoSuchAdminException {
-		logger.info("login() called");
-		String result = adminService.adminLogin(adminId, password);
-		if (result != null)
-			return new ResponseEntity<>(result, HttpStatus.ACCEPTED);
-		else
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-	}
+	//http://localhost:9090/GharKaKhana-api/admins/loginAdmin/{userName}/{password}
+		@PostMapping(path = "/loginAdmin/{userName}/{password}")
+		public ResponseEntity<String> loginAdmin(@PathVariable("userName") String userName,@PathVariable("password") String password){
+			String result = adminService.adminLogin(userName, password);
+			if(result != null)
+				return new ResponseEntity<>(result,HttpStatus.OK);
+			else 
+				return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 
 	/*
 	 * http://localhost:9090/GharKaKhana-api/admins/addVendor
@@ -112,9 +107,9 @@ public class AdminController {
 		logger.info("getAllVendor() method is called");
 		List<Vendor> result = adminService.findAllVendors();
 		if (result != null)
-			return new ResponseEntity<>(result, HttpStatus.FOUND);
+			return new ResponseEntity<>(result, HttpStatus.OK);
 		else
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	/*
@@ -235,13 +230,4 @@ public class AdminController {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	}
 	
-	//http://localhost:9090/GharKaKhana-api/admins/loginAdmin2/{userName}/{password}
-	@PostMapping(path = "/loginAdmin2/{userName}/{password}")
-	public ResponseEntity<String> loginAdmin(@PathVariable("userName") String userName,@PathVariable("password") String password){
-		String result = adminService.adminLogin2(userName, password);
-		if(result != null)
-			return new ResponseEntity<>(result,HttpStatus.OK);
-		else 
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-	}
 }
