@@ -58,7 +58,7 @@ public class CustomerController {
 		}
 
 	/*
-	 * http://localhost:9090/GharKaKhana-api/customers//placeOrder/{customerId}/{vendorId}
+	 * http://localhost:9090/GharKaKhana-api/customers/placeOrder/{customerId}/{vendorId}
 	 */
 	@PostMapping(path = "/placeOrder/{customerId}/{vendorId}")
 	public ResponseEntity<Order> placeOrder(@PathVariable("customerId") int customerId,

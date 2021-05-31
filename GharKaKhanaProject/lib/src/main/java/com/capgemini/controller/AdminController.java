@@ -81,9 +81,9 @@ public class AdminController {
 		logger.info("getAllAdmin() method is called");
 		List<Admin> result = adminService.findAllAdmins();
 		if (result != null)
-			return new ResponseEntity<>(result, HttpStatus.FOUND);
+			return new ResponseEntity<>(result, HttpStatus.OK);
 		else
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	/*
@@ -94,9 +94,9 @@ public class AdminController {
 		logger.info("getAllCustomer() method is called");
 		List<Customer> result = adminService.findAllCustomer();
 		if (result != null)
-			return new ResponseEntity<>(result, HttpStatus.FOUND);
+			return new ResponseEntity<>(result, HttpStatus.OK);
 		else
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	/*
@@ -135,7 +135,7 @@ public class AdminController {
 		if (result != null)
 			return new ResponseEntity<>(result, HttpStatus.CREATED);
 		else
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	/*
@@ -146,9 +146,9 @@ public class AdminController {
 		logger.info("getAllOrder() method is called");
 		List<Order> result = adminService.findAllOrder();
 		if (result != null)
-			return new ResponseEntity<>(result, HttpStatus.FOUND);
+			return new ResponseEntity<>(result, HttpStatus.OK);
 		else
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	/*
@@ -159,9 +159,9 @@ public class AdminController {
 		logger.info("getVendorById() method is called");
 		Vendor result = adminService.findVendorById(vendorId);
 		if (result != null)
-			return new ResponseEntity<>(result, HttpStatus.FOUND);
+			return new ResponseEntity<>(result, HttpStatus.OK);
 		else
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	/*
@@ -172,9 +172,9 @@ public class AdminController {
 		logger.info("getOrdorById() method is called");
 		Order result = adminService.findOrderById(orderId);
 		if (result != null)
-			return new ResponseEntity<>(result, HttpStatus.FOUND);
+			return new ResponseEntity<>(result, HttpStatus.OK);
 		else
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	/*
@@ -186,9 +186,9 @@ public class AdminController {
 		logger.info("getCustomerById() method is called");
 		Customer result = adminService.findCustomerById(customerId);
 		if (result != null)
-			return new ResponseEntity<>(result, HttpStatus.FOUND);
+			return new ResponseEntity<>(result, HttpStatus.OK);
 		else
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	/*
@@ -199,9 +199,9 @@ public class AdminController {
 		logger.info("getOrderByDate() method is called");
 		List<Order> result = adminService.findSortedOrderByDate();
 		if (result != null)
-			return new ResponseEntity<>(result, HttpStatus.FOUND);
+			return new ResponseEntity<>(result, HttpStatus.OK);
 		else
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	/*
@@ -212,9 +212,9 @@ public class AdminController {
 		logger.info("getOrderByAmount() method is called");
 		List<Order> result = adminService.findSortedOrderByAmount();
 		if (result != null)
-			return new ResponseEntity<>(result, HttpStatus.FOUND);
+			return new ResponseEntity<>(result, HttpStatus.OK);
 		else
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	/*
@@ -227,7 +227,7 @@ public class AdminController {
 		if (result)
 			return new ResponseEntity<>(result, HttpStatus.OK);
 		else
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
 }
