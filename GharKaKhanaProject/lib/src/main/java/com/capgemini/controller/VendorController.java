@@ -49,18 +49,18 @@ public class VendorController {
 	/*
 	 * http://localhost:9090/GharKaKhana-api/vendors/findFoodId/{foodId}
 	 */
-	@GetMapping(path = "findFoodId/{foodId}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(path = "findFoodId/{foodId}")
 	public ResponseEntity<FoodItem> getFoodById(@PathVariable("foodId") int foodId) throws NoSuchFoodItemException {
 		logger.info("getFoodById() called");
 		FoodItem result = vendorService.findFoodById(foodId);
 		if (result != null)
 			return new ResponseEntity<>(result, HttpStatus.OK);
 		else
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	//http://localhost:9090/GharKaKhana-api/vendors/findFoodItemByVendorId/{vendorId}
-	@GetMapping(path = "findFoodItemByVendorId/{vendorId}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(path = "findFoodItemByVendorId/{vendorId}")
 	public ResponseEntity<List<FoodItem>> findFoodItemByVendorId(@PathVariable("vendorId") int vendorId) {
 		logger.info("getFoodById() called");
 		List<FoodItem> result = vendorService.findFoodItemById(vendorId);

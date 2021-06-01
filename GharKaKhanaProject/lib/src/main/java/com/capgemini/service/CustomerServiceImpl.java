@@ -1,6 +1,7 @@
 package com.capgemini.service;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,7 @@ import com.capgemini.entities.Order;
 import com.capgemini.entities.Vendor;
 import com.capgemini.exceptions.NoSuchDishException;
 import com.capgemini.exceptions.NoSuchOrderException;
+import com.capgemini.mail.EmailSenderService;
 import com.capgemini.repository.CustomerRepository;
 import com.capgemini.repository.FoodItemRepository;
 import com.capgemini.repository.OrderRepository;
@@ -28,7 +30,9 @@ import com.capgemini.utilities.GlobalResources;
 public class CustomerServiceImpl implements CustomerService {
 
 	Logger logger = GlobalResources.getLogger(CustomerServiceImpl.class);
-
+	
+	@Autowired
+    private EmailSenderService mailService;
 	@Autowired
 	/* Creating reference (it creates loosely coupled application) */
 	private CustomerRepository customerRepository;
@@ -52,18 +56,17 @@ public class CustomerServiceImpl implements CustomerService {
 		}
 		return result;
 	}
-	
+
 	@Override
 	public String customerLogin(String userName, String password) {
 		logger.info("customerLogin() called");
 		Customer customer = customerRepository.getCustomerData(userName);
-		String user= customerRepository.getUserName(userName);
+		String user = customerRepository.getUserName(userName);
 		if (customer.getUserName().equals(user) && customer.getPassword().equals(password))
 			return "Login Successful";
 		else
 			return null;
 	}
-
 
 	/* Place Order by selecting dishes from menu */
 	@Override
@@ -71,6 +74,8 @@ public class CustomerServiceImpl implements CustomerService {
 		logger.info("placeOrder() called");
 		LocalDate date = LocalDate.now();
 		LocalTime time = LocalTime.now();
+		DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+		DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("HH:mm");
 		Customer customer = customerRepository.findById(customerId).get();
 		logger.info("placeOrder() customerRepo");
 		Vendor vendor = vendorRepository.findById(vendorId).get();
@@ -89,6 +94,11 @@ public class CustomerServiceImpl implements CustomerService {
 			order.setOrderStatus("Pending");
 			order.setVendor(vendor);
 			order.setOrderPaymentStatus("Pending");
+			String orderDetails = "Order Date: " + order.getOrderDate().format(dateFormat) + "\n" + "Order Time: " + order.getOrderTime().format(timeFormat)
+					+ "\n" + "Order status: " + order.getOrderStatus() + "\n" + "Total Price: " + order.getOrderPrice() +" ₹"
+					+ "\n" + "Vendor Name: " + order.getVendor().getVendorName() + "\n" + "Vendor Contact: "
+					+ "+91"+ order.getVendor().getVendorContact();
+			mailService.sendMail(order.getCustomer().getEmailId(), "Your Order Placed Successfully", orderDetails);
 			order = orderRepository.save(order);
 			order = orderRepository.findByOrderId(order.getOrderId());
 			return order;/* inserting record in vendor table */

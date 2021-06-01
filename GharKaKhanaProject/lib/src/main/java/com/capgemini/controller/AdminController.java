@@ -133,7 +133,7 @@ public class AdminController {
 		logger.info("updateVendor() method is called");
 		Vendor result = adminService.addVendor(vendor);
 		if (result != null)
-			return new ResponseEntity<>(result, HttpStatus.CREATED);
+			return new ResponseEntity<>(result, HttpStatus.OK);
 		else
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
